@@ -1,0 +1,88 @@
+{
+  "type" : "index_hadoop",
+  "spec" : {
+    "ioConfig" : {
+      "type" : "hadoop",
+      "inputSpec" : {
+        "type" : "static",
+        "paths" : "/user/lid4/correia/ssb/ssb_analytical_objects.analytical_obj30/"
+      }
+    },
+    "dataSchema" : {
+      "dataSource" : "analytical_obj30_SMonth_QWeek_PHashed2",
+      "granularitySpec" : {
+        "type" : "uniform",
+        "segmentGranularity" : "month",
+        "queryGranularity" : "week",
+        "intervals" : ["1991/1999"]
+      },
+      "parser" : {
+        "type" : "hadoopyString",
+        "parseSpec" : {
+          "format" : "tsv",
+          "columns" : ["c_custkey","c_name","c_address","c_city","c_nation","c_region","c_phone","c_mktsegment","s_suppkey","s_name","s_address","s_city","s_nation","s_region","s_phone","p_partkey","p_name","p_mfgr","p_category","p_brand1","p_color","p_type","p_size","p_container","od_datekey","od_datestandard","od_date","od_weeknuminyear","od_monthnuminyear","od_year","od_daynuminmonth","od_yearmonthnum","od_yearmonth","cd_datekey","cd_datestandard","cd_date","cd_weeknuminyear","cd_monthnuminyear","cd_year","cd_daynuminmonth","cd_yearmonthnum","cd_yearmonth","orderkey","linenumber","orderpriority","shippriority","quantity","extendedprice","ordertotalprice","discount","revenue","supplycost","tax","shipmode"],
+          "delimiter":"|",
+          "dimensionsSpec" : {
+            "dimensions" : [
+              "c_city",
+              "c_nation",
+              "c_region",
+              "s_city",
+              "s_nation",
+              "s_region",
+              "p_mfgr",
+              "p_category",
+              "p_brand1",
+              "od_weeknuminyear",
+              "od_year",
+              "od_yearmonthnum",
+              "od_yearmonth"
+            ]
+          },
+          "timestampSpec" : {
+            "format" : "yyyy-MM-dd",
+            "column" : "od_datestandard"
+          }
+        }
+      },
+      "metricsSpec" : [
+        {
+          "type" : "doubleSum",
+          "name" : "quantity",
+          "fieldName" : "quantity"
+        },
+        {
+          "type" : "doubleSum",
+          "name" : "extendedprice",
+          "fieldName" : "extendedprice"
+        },
+        {
+          "type" : "doubleSum",
+          "name" : "discount",
+          "fieldName" : "discount"
+        },
+        {
+          "type" : "doubleSum",
+          "name" : "revenue",
+          "fieldName" : "revenue"
+        },
+        {
+          "type" : "doubleSum",
+          "name" : "supplycost",
+          "fieldName" : "supplycost"
+        }
+      ]
+    },
+    "tuningConfig" : {
+      "type" : "hadoop",
+      "maxRowsInMemory" : "200000",
+      "numBackgroundPersistThreads":"1",
+      "partitionsSpec": {
+        "type": "hashed",
+        "numShards": 2
+      },
+      "jobProperties" : {
+      }
+    }
+  }
+}
